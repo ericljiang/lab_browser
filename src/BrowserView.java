@@ -22,6 +22,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.scene.web.WebView;
 import javax.imageio.ImageIO;
 import org.w3c.dom.Document;
@@ -75,6 +76,9 @@ public class BrowserView {
         myModel = model;
         // use resources for labels
         myResources = ResourceBundle.getBundle(DEFAULT_RESOURCE_PACKAGE + language);
+        myFavorites = new ComboBox<String>();
+        myFavorites.setOnAction(event -> showFavorite(myFavorites.getValue()));
+        myFavorites.setValue("Favorites");
         BorderPane root = new BorderPane();
         // must be first since other panels may refer to page
         root.setCenter(makePageDisplay());
@@ -84,19 +88,26 @@ public class BrowserView {
         enableButtons();
         // create scene to hold UI
         myScene = new Scene(root, DEFAULT_SIZE.width, DEFAULT_SIZE.height);
-        //myScene.getStylesheets().add(DEFAULT_RESOURCE_PACKAGE + STYLESHEET);
+        myScene.getStylesheets().add(DEFAULT_RESOURCE_PACKAGE + STYLESHEET);
     }
 
     /**
      * Display given URL.
      */
     public void showPage (String url) {
-        URL valid = myModel.go(url);
-        if (url != null) {
+        
+        /*if (url != null) {
             update(valid);
         }
         else {
             showError("Could not load " + url);
+        }*/
+        try {
+        	URL valid = myModel.go(url);
+        	update(valid);
+        } catch (BrowserException ex) {
+        	showError(ex.getMessage());
+        	ex.printStackTrace();
         }
     }
 
@@ -120,18 +131,28 @@ public class BrowserView {
     public void showError (String message) {
         Alert alert = new Alert(AlertType.ERROR);
         alert.setTitle(myResources.getString("ErrorTitle"));
-        alert.setContentText(message);
+        alert.setContentText(String.format(myResources.getString("ErrorMessage"), message));
         alert.showAndWait();
     }
 
     // move to the next URL in the history
     private void next () {
-        update(myModel.next());
+        try {
+			update(myModel.next());
+		} catch (BrowserException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 
     // move to the previous URL in the history
     private void back () {
-        update(myModel.back());
+        try {
+			update(myModel.back());
+		} catch (BrowserException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 
     // change current URL to the home page, if set
@@ -145,7 +166,7 @@ public class BrowserView {
     }
 
     // update just the view to display given URL
-    private void update (URL url) {
+    private void update (URL url) throws BrowserException {
         myPage.getEngine().load(url.toString());
         myURLDisplay.setText(url.toString());
         enableButtons();
@@ -225,6 +246,11 @@ public class BrowserView {
             myModel.setHome();
             enableButtons();
         }));
+        result.getChildren().add(makeButton("AddFavoriteCommand", event -> {
+            addFavorite();
+            enableButtons();
+        }));
+        result.getChildren().add(myFavorites);
         return result;
     }
 

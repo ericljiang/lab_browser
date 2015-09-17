@@ -1,12 +1,17 @@
+H3 {
+    -fx-font-family: "Comic Sans MS";
+}
+
 .root {
     -fx-font-size: 14pt;
-    -fx-font-family: "Courier New";
+    -fx-font-family: "Comic Sans MS";
     -fx-base: rgb(132, 145, 47);
     -fx-background: rgb(225, 228, 203);
 }
 
 .button {
-    -fx-text-fill: #006464;
+    -fx-font-family: "Comic Sans MS";
+    -fx-text-fill: #000000;
     -fx-background-color: #DFB951;
     -fx-border-radius: 20;
     -fx-background-radius: 20;
@@ -18,6 +23,7 @@
 }
 
 .combo-box-base {
+    -fx-font-family: "Comic Sans MS";
     -fx-text-base-color: #006464;
     -fx-background-color: #DFB951;
     -fx-border-radius: 20;
@@ -29,12 +35,12 @@
 
 .label {
     -fx-font-size: 11pt;
-    -fx-font-family: "Segoe UI Semibold";
+    -fx-font-family: "Comic Sans MS";
     -fx-text-fill: #006464;
     -fx-opacity: 0.6;
 }
 
 .text-field {
     -fx-font-size: 14pt;
-    -fx-font-family: "Segoe UI Semibold";
+    -fx-font-family: "Comic Sans MS";
 }
